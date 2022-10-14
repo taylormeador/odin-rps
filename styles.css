@@ -1,0 +1,49 @@
+body {
+    display: flex;
+    flex-direction: column;
+    background-color: aliceblue;
+    align-items: center;
+}
+
+p {
+    font-family: san-serif;
+    font-size: 36px;
+    font-weight: bolder;
+    color: rgb(17, 37, 37);
+}
+
+.select-weapon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 100px;
+}
+
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn:hover {
+    transform: scale(1.1);
+}
+
+#rock-btn {
+    max-width: 240px;
+    height: auto;
+    padding-left: 50px;
+    padding-right: 30px;
+}
+
+#paper-btn {
+    max-width: 220px;
+    height: auto;    
+    padding-left: 60px;
+    padding-right: 30px; 
+}
+
+#scissors-btn {
+    max-width: 350px;
+    height: auto;
+}

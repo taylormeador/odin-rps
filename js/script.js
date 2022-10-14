@@ -1,21 +1,24 @@
 const CHOICES = ['rock', 'paper', 'scissors'];
 const WINNING_SCORE = 5;
-initGame();
 
-function initGame() {
-    game = {
-        playerScore: 0,
-        cpuScore: 0,
-        rounds: 0,
-        playerChoice: '',
-        cpuChoice: '',
-        winner: '',
-    }
+let game = {
+    playerScore: 0,
+    cpuScore: 0,
+    rounds: 0,
+    playerChoice: '',
+    cpuChoice: '',
+    winner: '',
 }
+
+const weaponSelectors = document.querySelector('.select-weapon');
+weaponSelectors.addEventListener('click', handleWeaponClick);
+
+const currentScore = document.querySelector('#current-score');
+const announcement = document.querySelector('#announcement');
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
-  }
+}
 
 function getComputerChoice() {
     return CHOICES[getRandomInt(3)]
@@ -73,7 +76,8 @@ function playRound(playerSelection, computerSelection) {
 }
 
 function handleWeaponClick(e) {
-    const isButton = e.target.nodeName === 'BUTTON';
+    stopConfetti();
+    const isButton = e.target.nodeName === 'INPUT';
     if (!isButton) {
         return;
     }
@@ -92,18 +96,24 @@ function handleResult(result) {
     if (game.playerScore >= WINNING_SCORE || game.cpuScore >= WINNING_SCORE) {
         gameOver();
     } else {
-        currentScore.textContent = `Player score: ${game.playerScore} Computer score: ${game.cpuScore}`
+        currentScore.textContent = `Player score: ${game.playerScore} | Computer score: ${game.cpuScore}`
     }
 }
 
 function gameOver() {
     game.playerScore >= 5 ? game.winner = 'You' : game.winner = 'Computer';
     currentScore.textContent = `Game over! ${game.winner} won this round`;
-    initGame();
+    announcement.textContent = 'Choose a weapon to start a new game!'
+    if (game.winner === 'You') {
+        startConfetti();
+    }
+    // init new game
+    game = {
+        playerScore: 0,
+        cpuScore: 0,
+        rounds: 0,
+        playerChoice: '',
+        cpuChoice: '',
+        winner: '',
+    }
 }
-
-const weaponSelectors = document.querySelector('.select-weapon');
-weaponSelectors.addEventListener('click', handleWeaponClick);
-
-const currentScore = document.querySelector('#current-score');
-const announcement = document.querySelector('#announcement');
