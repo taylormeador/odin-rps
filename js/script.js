@@ -1,4 +1,17 @@
-const CHOICES = ['rock', 'paper', 'scissors']
+const CHOICES = ['rock', 'paper', 'scissors'];
+const WINNING_SCORE = 5;
+initGame();
+
+function initGame() {
+    game = {
+        playerScore: 0,
+        cpuScore: 0,
+        rounds: 0,
+        playerChoice: '',
+        cpuChoice: '',
+        winner: '',
+    }
+}
 
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
@@ -34,35 +47,63 @@ function getAnnouncement(a, b, score) {
     if (score[0] == score[1]) {
         return `Tie! You both chose ${a}`;
     } else if (score[0]) {
+        a = capitalize(a);
         return `You Win! ${a} beats ${b}`;
     } else {
+        b = capitalize(b);
         return `You Lose! ${b} beats ${a}`;
     }  
 }
 
+function capitalize(s) {
+    return s[0].toUpperCase() + s.substring(1);
+}
+
 function playRound(playerSelection, computerSelection) {
     if (playerSelection === computerSelection) {
-        return [0, 0];
+        handleResult([0, 0]);
+        return;
     } else if (getWinner(playerSelection, computerSelection)) {
-        return [1, 0];
+        handleResult([1, 0]);
+        return;
     } else {
-        return [0, 1];
+        handleResult([0, 1]);
+        return;
     }
 }
 
-function game(rounds) {
-    let playerScore = 0;
-    let cpuScore = 0;
-    for (let i = 0; i < rounds; i++) {
-        let playerChoice = prompt('Choose your weapon!');
-        let cpuChoice = getComputerChoice();
-        let result = playRound(playerChoice, cpuChoice);
+function handleWeaponClick(e) {
+    const isButton = e.target.nodeName === 'BUTTON';
+    if (!isButton) {
+        return;
+    }
+    let weapon = e.target.id.split('-')[0];
+    let cpuWeapon = getComputerChoice();
+    game.playerChoice = weapon;
+    game.cpuChoice = cpuWeapon;
+    playRound(weapon, cpuWeapon);
+}
 
-        playerScore += result[0];
-        cpuScore += result[1];
-        console.log(getAnnouncement(playerChoice, cpuChoice, result))
-        console.log(`Player score: ${playerScore} Computer score: ${cpuScore}`)
+function handleResult(result) {
+    game.playerScore += result[0];
+    game.cpuScore += result[1];
+    game.rounds += 1;
+    announcement.textContent = getAnnouncement(game.playerChoice, game.cpuChoice, result);
+    if (game.playerScore >= WINNING_SCORE || game.cpuScore >= WINNING_SCORE) {
+        gameOver();
+    } else {
+        currentScore.textContent = `Player score: ${game.playerScore} Computer score: ${game.cpuScore}`
     }
 }
 
-game(3)
+function gameOver() {
+    game.playerScore >= 5 ? game.winner = 'You' : game.winner = 'Computer';
+    currentScore.textContent = `Game over! ${game.winner} won this round`;
+    initGame();
+}
+
+const weaponSelectors = document.querySelector('.select-weapon');
+weaponSelectors.addEventListener('click', handleWeaponClick);
+
+const currentScore = document.querySelector('#current-score');
+const announcement = document.querySelector('#announcement');
